@@ -273,6 +273,11 @@ const sounds = [
   { label: "Right then, I'd better crack on.",       file: "better_crack_on.mp3"        },
   { label: "Catch you later, bubba.",                file: "catch_you_later.mp3"        },
   { label: "Cheers, darling. See ya!",               file: "cheers_darling.mp3"         },
+  { label: "Don't take offense...",                  file: "offense.mp3"                },
+  { label: "",                                       file: ""                           },
+  { label: "",                                       file: ""                           },
+  { label: "",                                       file: ""                           },
+  { label: "",                                       file: ""                           },
 ];
 // ============================================================
 
@@ -287,6 +292,14 @@ const speechBubble = document.getElementById('speechBubble');
 
 sounds.forEach(sound => {
   const btn = document.createElement('button');
+  if (!sound.file) {
+    btn.className = 'sound-btn not-loaded';
+    btn.style.opacity = '0.15';
+    btn.style.cursor = 'default';
+    btn.style.pointerEvents = 'none';
+    grid.appendChild(btn);
+    return;
+  }
   btn.className = 'sound-btn not-loaded';
   btn.id = 'btn-' + sound.file;
   btn.textContent = sound.label;
@@ -332,6 +345,7 @@ function playSound(sound, btn) {
 }
 
 async function loadSound(sound) {
+  if (!sound.file) return;
   try {
     const res = await fetch('sounds/' + sound.file);
     if (!res.ok) throw new Error('not found');
