@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kano's Kebabs & Banter</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bangers&family=Nunito:wght@400;600;700&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    min-height: 100vh;
+    background: #1a0f00;
+    font-family: 'Nunito', sans-serif;
+    color: #f5e6c8;
+    overflow-x: hidden;
+  }
+
+  /* ── Hero Banner ── */
+  .hero {
+    position: relative;
+    width: 100%;
+    height: clamp(220px, 35vw, 420px);
+    overflow: hidden;
+  }
+
+  .hero-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 20%;
+    display: block;
+    filter: brightness(0.75);
+  }
+
+  /* dark gradient over bottom of hero so text sits on it cleanly */
+  .hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(26,15,0,0.85) 85%, #1a0f00 100%);
+  }
+
+  .hero-text {
+    position: absolute;
+    bottom: 1.2rem;
+    left: 0; right: 0;
+    text-align: center;
+    z-index: 2;
+  }
+
+  .hero-text h1 {
+    font-family: 'Bangers', cursive;
+    font-size: clamp(2.4rem, 8vw, 5.5rem);
+    letter-spacing: 0.07em;
+    color: #f5a623;
+    text-shadow: 4px 4px 0 #7a3e00, -1px -1px 0 #3a1e00, 0 0 40px rgba(245,166,35,0.3);
+    line-height: 1;
+  }
+
+  .hero-text h2 {
+    font-family: 'Bangers', cursive;
+    font-size: clamp(1rem, 3.5vw, 2rem);
+    letter-spacing: 0.18em;
+    color: #d4a96a;
+    font-weight: 400;
+    margin-top: 4px;
+    text-shadow: 2px 2px 0 #3a1e00;
+  }
+
+  /* ── Status bar ── */
+  .status-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 0.6rem 1rem;
+    font-size: 12px;
+    color: #a07840;
+    border-bottom: 1px solid #2e1a00;
+  }
+
+  .status-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: #a07840;
+    flex-shrink: 0;
+  }
+  .status-dot.loading { background: #f5a623; animation: pulse 1s infinite; }
+  .status-dot.ready   { background: #27ae60; }
+
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+  /* ── Speech bubble ── */
+  .speech-wrap {
+    max-width: 900px;
+    margin: 1.2rem auto 0;
+    padding: 0 1.5rem;
+  }
+
+  .speech-bubble {
+    background: #2e1a00;
+    border: 2px solid #8b6020;
+    border-radius: 14px;
+    padding: 0.7rem 1.25rem;
+    font-size: clamp(13px, 2vw, 16px);
+    font-weight: 700;
+    color: #f5e6c8;
+    min-height: 48px;
+    text-align: center;
+    line-height: 1.4;
+    position: relative;
+  }
+
+  /* ── Board ── */
+  .board-wrap {
+    max-width: 900px;
+    margin: 1rem auto 3rem;
+    padding: 0 1.5rem;
+  }
+
+  .board-bg {
+    background: #3d2a10;
+    background-image:
+      repeating-linear-gradient(0deg, transparent, transparent 28px, rgba(0,0,0,0.08) 28px, rgba(0,0,0,0.08) 29px),
+      repeating-linear-gradient(90deg, transparent, transparent 28px, rgba(0,0,0,0.08) 28px, rgba(0,0,0,0.08) 29px);
+    border: 3px solid #7a5020;
+    border-radius: 16px;
+    padding: 1.25rem;
+    box-shadow: inset 0 2px 12px rgba(0,0,0,0.4), 0 6px 28px rgba(0,0,0,0.6);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+  }
+
+  /* ── Buttons ── */
+  .sound-btn {
+    position: relative;
+    background: linear-gradient(160deg, #72727e, #4c4c5a);
+    border: none;
+    border-radius: 10px;
+    padding: 0.7rem 0.55rem;
+    cursor: pointer;
+    font-family: 'Nunito', sans-serif;
+    font-size: clamp(10px, 1.1vw, 12.5px);
+    font-weight: 700;
+    color: #f5a623;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+    line-height: 1.25;
+    text-align: center;
+    min-height: 66px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow:
+      0 4px 0 #252530,
+      inset 0 1px 0 rgba(255,255,255,0.18),
+      inset 0 -1px 0 rgba(0,0,0,0.35);
+    transition: transform 0.08s, box-shadow 0.08s, background 0.1s;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    overflow: hidden;
+  }
+
+  .sound-btn:hover {
+    background: linear-gradient(160deg, #82828f, #5c5c6c);
+    color: #ffc04a;
+  }
+
+  .sound-btn:active,
+  .sound-btn.playing {
+    transform: translateY(3px);
+    box-shadow: 0 1px 0 #252530, inset 0 2px 5px rgba(0,0,0,0.45);
+    background: linear-gradient(160deg, #5c5c6a, #404050);
+    color: #ffc04a;
+  }
+
+  .sound-btn.playing {
+    outline: 1.5px solid #f5a623;
+    outline-offset: -1px;
+  }
+
+  .progress-bar {
+    position: absolute;
+    bottom: 0; left: 0;
+    height: 3px;
+    background: #f5a623;
+    width: 0%;
+    border-radius: 0 0 10px 10px;
+  }
+
+  @keyframes progress { from{width:0%} to{width:100%} }
+
+  .not-loaded { opacity: 0.45; cursor: not-allowed; }
+
+  /* ── Responsive ── */
+  @media (max-width: 680px) {
+    .grid { grid-template-columns: repeat(3, 1fr); }
+  }
+  @media (max-width: 420px) {
+    .grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  footer {
+    text-align: center;
+    padding: 0.75rem 1rem 2rem;
+    font-size: 11px;
+    color: #4a2e08;
+  }
+</style>
+</head>
+<body>
+
+<!-- Hero banner — uses your PNG as a full-width background image -->
+<div class="hero">
+  <img class="hero-img" src="kano.png" alt="Kano">
+  <div class="hero-text">
+    <h1>KANO'S KEBABS</h1>
+    <h2>&amp; Banter</h2>
+  </div>
+</div>
+
+<div class="status-bar">
+  <div class="status-dot loading" id="statusDot"></div>
+  <span id="statusText">Loading sounds...</span>
+</div>
+
+<div class="speech-wrap">
+  <div class="speech-bubble" id="speechBubble">Click a button, darling...</div>
+</div>
+
+<div class="board-wrap">
+  <div class="board-bg">
+    <div class="grid" id="grid"></div>
+  </div>
+</div>
+
+<footer>Best Kebabs in the Business &nbsp;&middot;&nbsp; Est. Whenever</footer>
+
+<script>
+// ============================================================
+//  YOUR 25 SOUND BUTTONS
+//  label : text shown on the button
+//  file  : MP3 filename inside the /sounds/ folder
+// ============================================================
+const sounds = [
+  { label: "Alright, boss?",                         file: "alright_boss.mp3"          },
+  { label: "Hey, darling. How's it going?",          file: "hey_darling.mp3"            },
+  { label: "What's the word, bubba?",                file: "whats_the_word.mp3"         },
+  { label: "Spot on.",                               file: "spot_on.mp3"                },
+  { label: "Yeah, definitely, darling.",             file: "yeah_definitely.mp3"        },
+  { label: "Oh, brilliant.",                         file: "oh_brilliant.mp3"           },
+  { label: "Tell me about it.",                      file: "tell_me_about_it.mp3"       },
+  { label: "Makes total sense, boss.",               file: "makes_total_sense.mp3"      },
+  { label: "Not a chance, darling.",                 file: "not_a_chance.mp3"           },
+  { label: "I don't think so, boss.",                file: "i_dont_think_so.mp3"        },
+  { label: "Nah, not really.",                       file: "nah_not_really.mp3"         },
+  { label: "Come again?",                            file: "come_again.mp3"             },
+  { label: "What are you on about, you plonker?",    file: "what_are_you_on_about.mp3"  },
+  { label: "I haven't got a clue, bubba.",           file: "havent_got_a_clue.mp3"      },
+  { label: "Let me have a think on that.",           file: "let_me_think.mp3"           },
+  { label: "Absolute madness.",                      file: "absolute_madness.mp3"       },
+  { label: "[A cheeky chuckle] You plonker...",      file: "cheeky_chuckle.mp3"         },
+  { label: "Are you having a laugh?",                file: "are_you_having_a_laugh.mp3" },
+  { label: "Seriously, boss?",                       file: "seriously_boss.mp3"         },
+  { label: "Oh, bloody hell.",                       file: "oh_bloody_hell.mp3"         },
+  { label: "Lovely.",                                file: "lovely.mp3"                 },
+  { label: "Right...",                               file: "right.mp3"                  },
+  { label: "Right then, I'd better crack on.",       file: "better_crack_on.mp3"        },
+  { label: "Catch you later, bubba.",                file: "catch_you_later.mp3"        },
+  { label: "Cheers, darling. See ya!",               file: "cheers_darling.mp3"         },
+];
+// ============================================================
+
+const audioCtx     = new (window.AudioContext || window.webkitAudioContext)();
+const buffers      = {};
+let loadedCount    = 0;
+
+const grid         = document.getElementById('grid');
+const statusDot    = document.getElementById('statusDot');
+const statusText   = document.getElementById('statusText');
+const speechBubble = document.getElementById('speechBubble');
+
+sounds.forEach(sound => {
+  const btn = document.createElement('button');
+  btn.className = 'sound-btn not-loaded';
+  btn.id = 'btn-' + sound.file;
+  btn.textContent = sound.label;
+  btn.addEventListener('click', () => playSound(sound, btn));
+  grid.appendChild(btn);
+});
+
+function playSound(sound, btn) {
+  if (!buffers[sound.file]) return;
+  if (audioCtx.state === 'suspended') audioCtx.resume();
+
+  const source = audioCtx.createBufferSource();
+  source.buffer = buffers[sound.file];
+  source.connect(audioCtx.destination);
+  source.start(0);
+
+  speechBubble.textContent = sound.label;
+
+  document.querySelectorAll('.sound-btn.playing').forEach(b => {
+    b.classList.remove('playing');
+    const pb = b.querySelector('.progress-bar');
+    if (pb) pb.style.animation = 'none';
+  });
+
+  btn.classList.add('playing');
+
+  let pb = btn.querySelector('.progress-bar');
+  if (!pb) {
+    pb = document.createElement('div');
+    pb.className = 'progress-bar';
+    btn.appendChild(pb);
+  }
+  pb.style.animation = 'none';
+  void pb.offsetHeight;
+  const dur = Math.min(buffers[sound.file].duration, 30);
+  pb.style.animation = `progress ${dur}s linear forwards`;
+
+  source.onended = () => {
+    btn.classList.remove('playing');
+    pb.style.animation = 'none';
+    speechBubble.textContent = 'Click a button, darling...';
+  };
+}
+
+async function loadSound(sound) {
+  try {
+    const res = await fetch('sounds/' + sound.file);
+    if (!res.ok) throw new Error('not found');
+    const ab = await res.arrayBuffer();
+    buffers[sound.file] = await audioCtx.decodeAudioData(ab);
+    document.getElementById('btn-' + sound.file)?.classList.remove('not-loaded');
+  } catch(e) {
+    console.warn('Could not load:', sound.file);
+  } finally {
+    loadedCount++;
+    statusText.textContent = `Loading... ${loadedCount}/${sounds.length}`;
+    if (loadedCount === sounds.length) {
+      const missing = sounds.length - Object.keys(buffers).length;
+      statusDot.className = 'status-dot ready';
+      statusText.textContent = missing
+        ? `ready · ${missing} file(s) missing — check filenames`
+        : `${sounds.length} sounds ready — cheers, darling!`;
+    }
+  }
+}
+
+sounds.forEach(loadSound);
+</script>
+</body>
+</html>
